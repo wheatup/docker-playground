@@ -230,6 +230,21 @@ docker image tag 36f react-app:latest
   * Tag an image with the same name (e.g. `docker image tag user/my-app:1.0.0`)
   * Push the imag: `docker push user/my-app:1.0.0`
 
+* Save an image as a compressed file
+
+```docker
+docker image save -o [filename].tar [image]:[tag]
+```
+
+```docker
+docker image save -o my-app.tar my-app:1.0.2
+```
+
+* Load an image from saved file
+
+```docker
+docker image load -i [filename].tar
+```
 
 ## Linix Base Directories
 
