@@ -12,6 +12,7 @@ FROM node:14.18.0-alpine3.14
 RUN addgroup app && adduser -S -G app app
 USER app
 WORKDIR /app
+RUN mkdir data
 COPY package.json .
 RUN npm i
 COPY . ./
@@ -54,6 +55,14 @@ WORKDIR /app
 ```
 
 Similar to `cd` command in linux, this sets the current work directory to `/app`, so all the commands take space using this directory.
+
+---
+
+```docker
+RUN mkdir data
+```
+
+Create a directory with current user, this is useful while using a volume, to avoid the volume has root permission instead of current user
 
 ---
 
@@ -244,6 +253,102 @@ docker image save -o my-app.tar my-app:1.0.2
 
 ```docker
 docker image load -i [filename].tar
+```
+
+* Run a container with published port
+
+```
+docker run -d -p [host port]:[container port] --name [name] [image]
+```
+
+```
+docker run -d -p 3000:3000 --name c1 react-app
+```
+
+* Run a command in a running container
+
+```
+docker exec [-it] [container] [command]
+```
+
+```
+docker exec -it c1 sh
+```
+
+* Stop a container
+
+```
+docker stop [container]
+```
+
+* Start a container
+
+```
+docker start [container]
+```
+
+* Remove a container
+
+```
+docker rm [-f] [container]
+```
+
+* Remove all stopped containers
+
+```
+docker container prune
+```
+
+---
+
+### Volumes and files
+
+* Create volume
+
+```
+docker volume create [volume name]
+```
+
+* Inspect a volume
+
+```
+docker volume inspect [volume name]
+```
+
+* Run a container with volume
+
+```
+docker run -v [volume name]:[volume directory] [image]
+```
+
+```
+docker run -d -p 4000:3000 -v app-data:/app/data
+```
+
+* Copy file from container to host
+
+```
+docker cp [container]:[file path] [local path]
+```
+
+```
+docker cp c1:/app/log.txt .
+```
+
+* Copy file from host to container
+
+```
+docker cp [file path] [container]:[path]
+```
+
+```
+docker cp secret.txt c1:/app
+```
+
+* Map working directory as a volume, so changes in working directory will be reflected to the container automatically
+
+```
+docker run -d -p 4000:3000 -v $(pwd):/app react-app
 ```
 
 ## Linix Base Directories
